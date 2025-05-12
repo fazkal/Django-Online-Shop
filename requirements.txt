@@ -1,5 +1,7 @@
 #main modules
 django >4.2,<4.3
 
+python-decouple
+
 # database modules
 psycopg[binary]
