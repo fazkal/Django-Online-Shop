@@ -6,6 +6,6 @@ app_name = 'accounts'
 urlpatterns = [
     
     path('login/',views.LoginViews.as_view(),name='login'),
-    # path('',include('django.contrib.auth.urls'))
+    path('logout/',views.LogoutView.as_view(),name='logout')
     
 ]
