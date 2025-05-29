@@ -11,6 +11,9 @@ class ProductCategoryModel(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True)
 
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
 
 class ProductModel(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.PROTECT)
@@ -26,6 +29,9 @@ class ProductModel(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_date']
 
 
 class ProductImageModel(models.Model):
