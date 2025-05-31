@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
 from .models import ProductModel,ProductStatusType
 
 # Create your views here.
@@ -15,3 +15,10 @@ class ShopProductListView(ListView):
         context = super().get_context_data(**kwargs)
         context['total_items'] = self.get_queryset().count()
         return context
+    
+
+class ShopProductDetailView(DetailView):
+
+    template_name = "shop/product-detail.html"
+    queryset = ProductModel.objects.filter(
+        status=ProductStatusType.publish.value)
