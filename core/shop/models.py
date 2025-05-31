@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import Decimal
 
 # Create your models here.
 
@@ -35,6 +36,14 @@ class ProductModel(models.Model):
 
     class Meta:
         ordering = ['-created_date']
+
+    def __str__(self):
+        return self.title
+    
+    def get_show_price(self):
+        discount_amount = self.price * Decimal(self.discount_percent / 100)
+        discount_amount = self.price - discount_amount
+        return '{:,}'.format(round(discount_amount))
 
 
 class ProductImageModel(models.Model):
