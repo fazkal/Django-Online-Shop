@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         fake = Faker(locale="fa_IR")
-        #user = User.objects.get(type=UserType.admin.value)
+        
         # List of images
         image_list = [
             "./images/img1.jpg",
@@ -36,12 +36,12 @@ class Command(BaseCommand):
         try:
             user = User.objects.get(type=UserType.admin.value)
         except User.DoesNotExist:
-            # اگر کاربری با این نوع وجود نداشت، یک کاربر جدید ایجاد کنید.
+            
             user = User.objects.create(
-                email='faker@test.com',  # نام کاربری پیش فرض
-                password='password',  # رمز عبور پیش فرض
+                email='faker@test.com', 
+                password='password',  
                 type=UserType.admin.value,
-                # سایر فیلدهای مورد نیاز کاربر
+               
             )
             user.set_password('password')
             user.save()
@@ -56,8 +56,9 @@ class Command(BaseCommand):
             selected_image = random.choice(image_list)
             image_obj = File(file=open(BASE_DIR / selected_image,"rb"),name=Path(selected_image).name)
             description = fake.paragraph(nb_sentences=10)
+            brief_description = fake.paragraph(nb_sentences=5)
             stock = fake.random_int(min=0, max=10)
-            status = random.choice(ProductStatusType.choices)[0]  # Replace with your actual status choices
+            status = random.choice(ProductStatusType.choices)[0] 
             price = fake.random_int(min=10000, max=100000)
             discount_percent = fake.random_int(min=0, max=50)
 
@@ -67,6 +68,7 @@ class Command(BaseCommand):
                 slug=slug,
                 image=image_obj,
                 description=description,
+                brief_description=brief_description,
                 stock=stock,
                 status=status,
                 price=price,
