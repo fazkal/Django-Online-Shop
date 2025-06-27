@@ -36,6 +36,7 @@ class CartSession:
             total_price = int(item["quantity"]) * product_obj.get_price()
             item["total_price"] = total_price
             self.total_payment_price += total_price
+            item["stock_range"] = range(1, product_obj.stock + 1)
         return cart_items
     
     def get_total_payment_price(self):
