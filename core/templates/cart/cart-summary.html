@@ -24,83 +24,78 @@
               {% for item in cart_items %}
                 <!-- Item -->
                 <li class="list-group-item">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0">
-                        <img class="avatar avatar-xl avatar-4x3" src="{{item.product_obj.image.url}}" alt="Image Description">
-                      </div>
-    
-                      <div class="flex-grow-1 ms-3">
-                        <div class="row">
-                          <div class="col-sm-7 mb-3 mb-sm-0">
-                            <h5><a class="text-dark" href="{% url 'shop:product-detail' slug=item.product_obj.slug %}">{{item.product_obj.title}}</a></h5>
-    
-                            <div class="d-block d-sm-none">
-                              <h5 class="mb-1">{{item.total_price}} تومان</h5>
-                            </div>
-    
-                            <div class="d-grid gap-1">
-                              <div class="text-body">
-                                <span class="small">دسته بندی:</span>
-                                <span class="fw-semibold small">{% for category in item.product_obj.category.all %}<a href="#">{{category.title}}</a>
-                                {% if not forloop.last %}
-                                ,
-                                {% endif %}
-                                {% endfor %}
-                                </span>
-                              </div>
-    
-                            </div>
-                          </div>
-                          <!-- End Col -->
-    
-                          <div class="col-sm-3">
-                            <div class="row">
-                              <div class="col-auto">
-                                <!-- Select -->
-                                <select class="form-select form-select-sm mb-3">
-                                  <option value="quantity1">1</option>
-                                  <option value="quantity2">2</option>
-                                  <option value="quantity3">3</option>
-                                  <option value="quantity4">4</option>
-                                  <option value="quantity5">5</option>
-                                  <option value="quantity6">6</option>
-                                  <option value="quantity7">7</option>
-                                  <option value="quantity8">8</option>
-                                  <option value="quantity9">9</option>
-                                  <option value="quantity10">10</option>
-                                </select>
-                                <!-- End Select -->
-                              </div>
-    
-                              <div class="col-auto">
-                                <div class="d-grid gap-2">
-                                  <a class="link-sm link-secondary small" href="javascript:;">
-                                    <i class="bi-trash me-1"></i> حذف
-                                  </a>
-    
-                                  <a class="link-sm link-secondary small" href="javascript:;">
-                                    <i class="bi-heart-fill ms-1 "></i>جزو علایق
-                                  </a>
-                                </div>
-                              </div>
-                              <!-- End Col -->
-                            </div>
-                            <!-- End Row -->
-                          </div>
-                          <!-- End Col -->
-    
-                          <div class="col-4 col-sm-2 d-none d-sm-inline-block text-right">
-                            <span class="h5 d-block mb-1">{{item.total_price}} تومان</span>
-                          </div>
-                          <!-- End Col -->
-                        </div>
-                        <!-- End Row -->
-                      </div>
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <img class="avatar avatar-xl avatar-4x3" src="{{item.product_obj.image.url}}" alt="Image Description">
                     </div>
-                  </li>
-              <!-- End Item -->
-               {% endfor %}
+            
+                    <div class="flex-grow-1 ms-3">
+                      <div class="row">
+                        <div class="col-sm-7 mb-3 mb-sm-0">
+                          <h5><a class="text-dark" href="{% url 'shop:product-detail' slug=item.product_obj.slug %}">{{item.product_obj.title}}</a></h5>
+            
+                          <div class="d-block d-sm-none">
+                            <h5 class="mb-1">{{item.total_price}} تومان</h5>
+                          </div>
+            
+                          <div class="d-grid gap-1">
+                            <div class="text-body">
+                              <span class="small">دسته بندی:</span>
+                              <span class="fw-semibold small">{% for category in item.product_obj.category.all %}<a href="#">{{category.title}}</a>
+                              {% if not forloop.last %}
+                              ,
+                              {% endif %}
+                              {% endfor %}
+                              </span>
+                            </div>
+            
+                          </div>
+                        </div>
+                        <!-- End Col -->
+            
+                        <div class="col-sm-3">
+                          <div class="row">
+                            <div class="col-auto">
+                              <!-- Select -->
+                              <select class="form-select form-select-sm mb-3">
+                                {# اینجا تغییر اصلی اعمال شده #}
+                                {% for i in item.stock_range %} {# حالا item.stock_range رو مستقیماً استفاده می‌کنیم #}
+                                  <option value="{{i}}" {% if i == item.quantity %} selected {% endif %}>{{i}}</option>
+                                {% endfor %}
+                              </select>
+                              <!-- End Select -->
+                            </div>
+            
+                            <div class="col-auto">
+                              <div class="d-grid gap-2">
+                                <a class="link-sm link-secondary small" href="javascript:;">
+                                  <i class="bi-trash me-1"></i> حذف
+                                </a>
+            
+                                <a class="link-sm link-secondary small" href="javascript:;">
+                                  <i class="bi-heart-fill ms-1 "></i>جزو علایق
+                                </a>
+                              </div>
+                            </div>
+                            <!-- End Col -->
+                          </div>
+                          <!-- End Row -->
+                        </div>
+                        <!-- End Col -->
+            
+                        <div class="col-4 col-sm-2 d-none d-sm-inline-block text-right">
+                          <span class="h5 d-block mb-1">{{item.total_price}} تومان</span>
+                        </div>
+                        <!-- End Col -->
+                      </div>
+                      <!-- End Row -->
+                    </div>
+                  </div>
+                </li>
+                <!-- End Item -->
+              {% endfor %}
             </ul>
+            
             <!-- End List Group -->
 
             <div class="d-sm-flex justify-content-end">
