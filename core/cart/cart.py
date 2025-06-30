@@ -7,6 +7,15 @@ class CartSession:
         self._cart = self.session.setdefault("cart",{"items":[]})
         #self.add_product()
 
+    def update_product_quantity(self,product_id,quantity):
+        for item in self._cart['items']:
+            if product_id == item['product_id']:
+                item['quantity'] = int(quantity)
+                break
+        else:
+            return
+        self.save()
+
     def add_product(self,product_id):
         for item in self._cart['items']:
             if product_id == item['product_id']:
