@@ -57,9 +57,10 @@
                           <div class="row">
                             <div class="col-auto">
                               <!-- Select -->
-                              <select class="form-select form-select-sm mb-3">
-                                {# اینجا تغییر اصلی اعمال شده #}
-                                {% for i in item.stock_range %} {# حالا item.stock_range رو مستقیماً استفاده می‌کنیم #}
+                              <select class="form-select form-select-sm mb-3" 
+                              onchange="changeProductQuantity('{{item.product_id}}',this.value)">
+                               
+                                {% for i in item.stock_range %} 
                                   <option value="{{i}}" {% if i == item.quantity %} selected {% endif %}>{{i}}</option>
                                 {% endfor %}
                               </select>
@@ -170,5 +171,30 @@
     <!-- End Content -->
   
   <!-- ========== END MAIN CONTENT ========== -->
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+  function changeProductQuantity(product_id,quantity){
+  $.ajax({
+    url: "{% url 'cart:session-update-product-quantity' %}",
+    method: "POST",
+    data: {product_id:product_id,
+          quantity:quantity,
+          csrfmiddlewaretoken: '{{csrf_token}}'
+    },
+    success: function(response){
+      console.log(response);
+      window.location.reload();
+    },
+    error: function(jqXHR,textStatus,errorThrown){
+      console.log(errorThrown);
+    }
+    
+  });
+  }
+</script>
 
 {% endblock %}
