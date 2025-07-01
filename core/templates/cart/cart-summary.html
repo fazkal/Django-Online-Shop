@@ -69,13 +69,13 @@
             
                             <div class="col-auto">
                               <div class="d-grid gap-2">
-                                <a class="link-sm link-secondary small" href="javascript:;">
-                                  <i class="bi-trash me-1"></i> حذف
-                                </a>
+                                <button class="btn btn-sm btn-icon" onclick="removeProduct('{{item.product_id}}')">
+                                  <i class="bi-trash ms-1"></i> حذف
+                                </button>
             
-                                <a class="link-sm link-secondary small" href="javascript:;">
+                                <button class="btn btn-sm btn-icon">
                                   <i class="bi-heart-fill ms-1 "></i>جزو علایق
-                                </a>
+                                </button>
                               </div>
                             </div>
                             <!-- End Col -->
@@ -183,6 +183,24 @@
     method: "POST",
     data: {product_id:product_id,
           quantity:quantity,
+          csrfmiddlewaretoken: '{{csrf_token}}'
+    },
+    success: function(response){
+      console.log(response);
+      window.location.reload();
+    },
+    error: function(jqXHR,textStatus,errorThrown){
+      console.log(errorThrown);
+    }
+    
+  });
+  }
+
+  function removeProduct(product_id){
+  $.ajax({
+    url: "{% url 'cart:session-remove-product' %}",
+    method: "POST",
+    data: {product_id:product_id,
           csrfmiddlewaretoken: '{{csrf_token}}'
     },
     success: function(response){
