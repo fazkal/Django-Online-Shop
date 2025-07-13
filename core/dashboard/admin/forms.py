@@ -10,7 +10,7 @@ class AdminPasswordChangeForm(auth_forms.PasswordChangeForm):
             "رمز عبور فعلی که وارد کردید اشتباه می باشد."
         ),
         "password_mismatch": _(
-            "رمز عبور فعلی با تکرار آن مطابقت ندارد."
+            "رمز عبور جدید با تکرار آن مطابقت ندارد."
         ),
     }
 
