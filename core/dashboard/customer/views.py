@@ -6,6 +6,8 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView,UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 class CustomerDashboardHomeView(LoginRequiredMixin,HasCustomerAccessPermission,TemplateView):
@@ -29,3 +31,19 @@ class CustomerProfileEditView (LoginRequiredMixin,HasCustomerAccessPermission,
 
     def get_object(self, queryset = None):
         return Profile.objects.get(user=self.request.user)
+    
+
+class CustomerProfileImagEditView(LoginRequiredMixin,HasCustomerAccessPermission,
+                       SuccessMessageMixin,UpdateView):
+    http_method_names = ['post']
+    model = Profile
+    fields = ['image']
+    success_url = reverse_lazy('dashboard:customer:profile-edit')
+    success_message = 'بروزرسانی تصویر پروفایل با موفقیت انجام شد'
+
+    def get_object(self, queryset = None):
+        return Profile.objects.get(user=self.request.user)
+    
+    def form_invalid(self, form):
+        messages.error(self.request,'ارسال تصویر با مشکل مواجه شد لطفا مجددا تلاش نمایید')
+        return redirect(self.success_url)
