@@ -39,6 +39,9 @@ class ProductModel(models.Model):
     class Meta:
         ordering = ['-created_date']
 
+    def is_published(self):
+        return self.status == ProductStatusType.publish.value
+
     def __str__(self):
         return self.title
     
