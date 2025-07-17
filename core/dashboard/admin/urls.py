@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile-edit/',views.AdminProfileEditView.as_view(),name='profile-edit'),
     path('profile-image-edit/',views.AdminProfileImagEditView.as_view(),name='profile-image-edit'),
     path('product/list/',views.AdminProductsListView.as_view(),name='product-list'),
-    path('product/<int:pk>/edit/',views.AdminProductsEditView.as_view(),name='product-edit')
+    path('product/<int:pk>/edit/',views.AdminProductsEditView.as_view(),name='product-edit'),
+    path('product/<int:pk>/delete/',views.AdminProductsDeleteView.as_view(),name='product-delete')
     
 ]
