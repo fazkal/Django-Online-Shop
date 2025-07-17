@@ -1,5 +1,5 @@
 from dashboard.permissions import HasAdminAccessPermission
-from dashboard.admin.forms import AdminPasswordChangeForm,AdminProfileEditForm
+from dashboard.admin.forms import AdminPasswordChangeForm,AdminProfileEditForm,AdminProductEditeForm
 from accounts.models import Profile
 from shop.models import ProductModel,ProductStatusType,ProductCategoryModel
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -81,3 +81,14 @@ class AdminProductsListView(LoginRequiredMixin,HasAdminAccessPermission,
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
         return context
+    
+
+class AdminProductsEditView(LoginRequiredMixin,HasAdminAccessPermission,
+                       SuccessMessageMixin,UpdateView):
+    template_name = 'dashboard/admin/products/product-edit.html'
+    queryset = ProductModel.objects.all()
+    form_class = AdminProductEditeForm
+    success_message = "ویرایش محصول با موفقیت انجام شد"
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:admin:product-edit',kwargs={'pk':self.get_object().pk})
