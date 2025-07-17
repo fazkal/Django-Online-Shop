@@ -47,3 +47,4 @@ class CustomerProfileImagEditView(LoginRequiredMixin,HasCustomerAccessPermission
     def form_invalid(self, form):
         messages.error(self.request,'ارسال تصویر با مشکل مواجه شد لطفا مجددا تلاش نمایید')
         return redirect(self.success_url)
+    
