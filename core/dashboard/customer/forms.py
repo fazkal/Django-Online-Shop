@@ -1,4 +1,5 @@
 from accounts.models import Profile
+from order.models import UserAddressModel
 from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -31,3 +32,14 @@ class CustomerProfileEditForm(forms.ModelForm):
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['phone_number'].widget.attrs['class'] = 'form-control text-center'
+
+
+class UserAddressForm(forms.ModelForm):
+    class Meta:
+        model = UserAddressModel
+        fields = [
+            'address',
+            'state',
+            'city',
+            'zip_code'
+        ]
