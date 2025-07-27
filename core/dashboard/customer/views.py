@@ -4,7 +4,7 @@ from accounts.models import Profile
 from order.models import UserAddressModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
-from django.views.generic import TemplateView,UpdateView,ListView,CreateView
+from django.views.generic import TemplateView,UpdateView,ListView,CreateView,DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -105,3 +105,13 @@ class CustomerAddressEditView(LoginRequiredMixin,HasCustomerAccessPermission,
 
     def get_success_url(self):
         return reverse_lazy('dashboard:customer:address-edit',kwargs={'pk':self.get_object().pk})
+    
+
+class CustomerAddressDeleteView(LoginRequiredMixin,HasCustomerAccessPermission,
+                                SuccessMessageMixin,DeleteView):
+    template_name = 'dashboard/customer/addresses/address-delete.html'
+    success_url = reverse_lazy('dashboard:customer:address-list')
+    success_message = 'حذف آدرس با موفقیت انجام شد'
+
+    def get_queryset(self):
+        return UserAddressModel.objects.filter(user=self.request.user)
