@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile-edit/',views.CustomerProfileEditView.as_view(),name='profile-edit'),
     path('profile-image-edit/',views.CustomerProfileImagEditView.as_view(),name='profile-image-edit'),
 
-    path('address/list/',views.CustomerAddressListView.as_view(),name='address-list')
+    path('address/list/',views.CustomerAddressListView.as_view(),name='address-list'),
+    path('address/create/',views.CustomerAddressCreateView.as_view(),name='address-create'),
 
 ]
