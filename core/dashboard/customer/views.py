@@ -1,10 +1,10 @@
 from dashboard.permissions import HasCustomerAccessPermission
-from dashboard.customer.forms import CustomerPasswordChangeForm,CustomerProfileEditForm
+from dashboard.customer.forms import CustomerPasswordChangeForm,CustomerProfileEditForm,UserAddressForm
 from accounts.models import Profile
 from order.models import UserAddressModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
-from django.views.generic import TemplateView,UpdateView,ListView
+from django.views.generic import TemplateView,UpdateView,ListView,CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -73,3 +73,23 @@ class CustomerAddressListView(LoginRequiredMixin,HasCustomerAccessPermission,Lis
         context = super().get_context_data(**kwargs)
         context['total_items'] = self.get_queryset().count()
         return context
+
+
+class CustomerAddressCreateView(LoginRequiredMixin,HasCustomerAccessPermission,
+                                SuccessMessageMixin,CreateView):
+    template_name = 'dashboard/customer/addresses/address-create.html'
+
+    form_class = UserAddressForm
+    success_message = 'ایجاد آدرس با موفقیت انجام شد'
+
+    def get_queryset(self):
+        return UserAddressModel.objects.filter(user=self.request.user)
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        super().form_valid(form)
+        return redirect(reverse_lazy('dashboard:customer:address-edit',kwargs={'pk':form.instance.pk}))
+    
+    def get_success_url(self):
+        return reverse_lazy('address:customer:address-list')
+    
