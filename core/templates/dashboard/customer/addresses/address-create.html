@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block header %}
+    <!-- Breadcrumb -->
 <div class="navbar-dark bg-dark" style="
-background-image: url({% static 'svg/components/wave-pattern-light.svg' %});
-">
+background-image: url({% static 'svg/components/wave-pattern-light.svg' %});">
 <div class="container content-space-1 content-space-b-lg-3">
 <div class="row align-items-center">
 <div class="col">
@@ -16,12 +16,37 @@ background-image: url({% static 'svg/components/wave-pattern-light.svg' %});
 <nav aria-label="breadcrumb">
 <ol class="breadcrumb breadcrumb-light mb-0">
 <li class="breadcrumb-item">حساب</li>
-<li class="breadcrumb-item">داشبورد مشتری</li>
+<li class="breadcrumb-item">داشبورد</li>
+<li class="breadcrumb-item">نشانی </li>
 <li class="breadcrumb-item active" aria-current="page">
-  ایجاد نشانی
+   ایجاد نشانی
 </li>
 </ol>
 </nav>
+<!-- End Breadcrumb -->
+</div>
+<!-- End Col -->
+
+<div class="col-auto">
+<!-- Responsive Toggle Button -->
+<button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+data-bs-target="#sidebarNav" aria-controls="sidebarNav" aria-expanded="false"
+aria-label="Toggle navigation">
+<span class="navbar-toggler-default">
+<i class="bi-list"></i>
+</span>
+<span class="navbar-toggler-toggled">
+<i class="bi-x"></i>
+</span>
+</button>
+<!-- End Responsive Toggle Button -->
+</div>
+<!-- End Col -->
+</div>
+<!-- End Row -->
+</div>
+</div>
+<!-- End Breadcrumb -->
 {% endblock %}
 
 {% block content %}
