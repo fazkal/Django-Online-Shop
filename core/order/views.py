@@ -33,3 +33,6 @@ class OrderCheckOutView(LoginRequiredMixin,HasCustomerAccessPermission,FormView)
         return context
     
 
+class OrderCompletedView(LoginRequiredMixin,HasCustomerAccessPermission,TemplateView):
+    template_name = 'order/completed.html'
+    
