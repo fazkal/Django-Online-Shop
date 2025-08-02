@@ -1,8 +1,10 @@
 from .models import UserAddressModel
+from .models import CouponModel
 from django import forms
 
 class CheckOutForm(forms.Form):
     address_id = forms.IntegerField(required=True)
+    coupon = forms.CharField(required=False)
 
     def __init__(self, *args,**kwargs):
         self.request = kwargs.pop('request',None)
@@ -17,3 +19,19 @@ class CheckOutForm(forms.Form):
         except UserAddressModel.DoesNotExist:
             raise forms.ValidationError('Invalid address for the requested user')
         return address
+    
+    def clean_coupon(self):
+        code = self.cleaned_data.get('coupon')
+        user = self.request.user
+        coupon = None
+
+        try:
+            coupon = CouponModel.objects.get(code=code)
+        except CouponModel.DoesNotExist:
+            raise forms.ValidationError('کد تخفیف اشتباه است')
+        if coupon:
+            if coupon.used_by.count() >= coupon.max_limit_usage:
+                raise forms.ValidationError('محدودیت در تعداد استفاده')
+            if user in coupon.used_by.all():
+                raise forms.ValidationError('شما قبلا از کد استفاده کرده اید')
+        return coupon
