@@ -37,7 +37,7 @@ class OrderModel(models.Model):
     address = models.CharField(max_length=250)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-    zip_code = models.CharField(50)
+    zip_code = models.CharField(max_length=30)
 
     total_price = models.DecimalField(default=0, max_digits=10,decimal_places=0)
     coupon = models.ForeignKey(CouponModel,on_delete=models.PROTECT,null=True,blank=True)
@@ -45,9 +45,15 @@ class OrderModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
+    def calculate_total_price(self):
+        return sum(item.price * item.quantity for item in self.order_items.all())
+    
+    def __str__(self):
+        return f"{self.user.email} - {self.id}"
+
 
 class OrderItemModel(models.Model):
-    order = models.ForeignKey(OrderModel,on_delete=models.CASCADE)
+    order = models.ForeignKey(OrderModel,on_delete=models.CASCADE,related_name='order_items')
     product = models.ForeignKey('shop.ProductModel',on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
