@@ -4,6 +4,7 @@ from .forms import CheckOutForm
 from cart.models import CartModel
 from cart.cart import CartSession
 from order.models import OrderModel,OrderItemModel
+from decimal import Decimal
 from django.views.generic import FormView,TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -23,6 +24,7 @@ class OrderCheckOutView(LoginRequiredMixin,HasCustomerAccessPermission,FormView)
     def form_valid(self, form):
         cleaned_data = form.cleaned_data
         address = cleaned_data['address_id']
+        coupon = cleaned_data['coupon']
         cart = CartModel.objects.get(user=self.request.user)
         cart_items = cart.cart_items.all()
         order = OrderModel.objects.create(
@@ -41,7 +43,13 @@ class OrderCheckOutView(LoginRequiredMixin,HasCustomerAccessPermission,FormView)
             )
         cart_items.delete()
         CartSession(self.request.session).clear()
-        order.total_price = order.calculate_total_price()
+        total_price = order.calculate_total_price()
+        if coupon:
+            total_price = total_price - round(total_price * Decimal(coupon.discount_percent/100))
+            order.coupon = coupon
+            coupon.used_by.add(self.request.user)
+            coupon.save()
+        order.total_price = total_price
         order.save()
         return super().form_valid(form)
 
