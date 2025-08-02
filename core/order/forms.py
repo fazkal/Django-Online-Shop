@@ -13,7 +13,7 @@ class CheckOutForm(forms.Form):
         user = self.request.user
 
         try:
-            address = UserAddressModel.objects.get(address=address_id,user=user)
+            address = UserAddressModel.objects.get(id=address_id,user=user)
         except UserAddressModel.DoesNotExist:
             raise forms.ValidationError('Invalid address for the requested user')
         return address
