@@ -1,5 +1,6 @@
 from .models import UserAddressModel
 from .models import CouponModel
+from django.utils import timezone
 from django import forms
 
 class CheckOutForm(forms.Form):
@@ -22,6 +23,8 @@ class CheckOutForm(forms.Form):
     
     def clean_coupon(self):
         code = self.cleaned_data.get('coupon')
+        if code == "":
+            return None
         user = self.request.user
         coupon = None
 
@@ -34,4 +37,6 @@ class CheckOutForm(forms.Form):
                 raise forms.ValidationError('محدودیت در تعداد استفاده')
             if user in coupon.used_by.all():
                 raise forms.ValidationError('شما قبلا از کد استفاده کرده اید')
+            if coupon.expiration_date and coupon.expiration_date < timezone.now():
+                raise forms.ValidationError('کدتخفیف متقضی شده است')
         return coupon
