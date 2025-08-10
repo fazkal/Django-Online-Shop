@@ -4,13 +4,15 @@ from .forms import CheckOutForm
 from cart.models import CartModel
 from cart.cart import CartSession
 from order.models import OrderModel,OrderItemModel,CouponModel
+from payment.zarinpal_client import ZarinPalSandbox
+from payment.models import PaymentModel
 from decimal import Decimal
 from django.views.generic import FormView,TemplateView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.utils import timezone
-
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -54,7 +56,25 @@ class OrderCheckOutView(LoginRequiredMixin,HasCustomerAccessPermission,FormView)
             coupon.save()
         order.total_price = total_price
         order.save()
-        return super().form_valid(form)
+        return redirect(self.create_payment_url(order))
+    
+    def create_payment_url(self, order):
+        zarinpal = ZarinPalSandbox()
+        response = zarinpal.payment_request(order.total_price)
+    
+        if 'data' in response and 'authority' in response['data']:
+            authority = response['data']['authority']
+            payment_obj = PaymentModel.objects.create(
+            authority_id=authority,
+            amount=order.total_price
+        )
+            order.payment = payment_obj
+            order.save()
+            return zarinpal.generate_payment_url(authority)
+        else:
+            error_code = response.get('errors', {}).get('code', 'نامشخص')
+            error_message = response.get('errors', {}).get('message', 'خطا در ارتباط با درگاه پرداخت')
+            raise Exception(f"خطا در ایجاد درگاه پرداخت: کد {error_code} - {error_message}")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
