@@ -47,5 +47,5 @@ class ZarinPalSandbox:
         return response.json()
     
     def generate_payment_url(self,authority):
-        return self._payment_page_url + authority
+        return f"{self._payment_page_url}{authority}"
     
