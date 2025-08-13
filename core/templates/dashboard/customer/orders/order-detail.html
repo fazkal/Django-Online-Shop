@@ -115,6 +115,14 @@ aria-label="Toggle navigation">
          <dt class="col-md-3"> قیمت نهایی :</dt>
          <dl class="col-md-3 formatted-price">{{object.total_price}} تومان</dl>
        </div>
+      {% if object.coupon %}
+       <div class="row mb-3">
+        <dt class="col-md-3">  تخفیف:</dt>
+        <dl class="col-md-3">{{object.coupon.discount_percent}}%</dl>
+        <dt class="col-md-3"> قیمت با اعمال تخفیف :</dt>
+        <dl class="col-md-3 formatted-price">{{object.get_price}} تومان</dl>
+      </div>
+      {% endif %}
        <!-- End Row -->
        <div class="row mb-3">
          <dt class="col-md-3"> آدرس:</dt>
