@@ -12,6 +12,8 @@ urlpatterns = [
     path('product/list/',views.AdminProductsListView.as_view(),name='product-list'),
     path('product/<int:pk>/edit/',views.AdminProductsEditView.as_view(),name='product-edit'),
     path('product/<int:pk>/delete/',views.AdminProductsDeleteView.as_view(),name='product-delete'),
-    path('product/create/',views.AdminProductsCreateView.as_view(),name='product-create')
+    path('product/create/',views.AdminProductsCreateView.as_view(),name='product-create'),
+    path("order/list/",views.AdminOrderListView.as_view(),name="order-list"),
+    path("order/<int:pk>/detail/",views.AdminOrderDetailView.as_view(),name="order-detail")
     
 ]
