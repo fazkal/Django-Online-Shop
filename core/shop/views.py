@@ -1,4 +1,4 @@
-from .models import ProductModel,ProductStatusType,ProductCategoryModel
+from .models import ProductModel,ProductStatusType,ProductCategoryModel,WishlistProductModel
 from django.views.generic import ListView,DetailView
 from django.core.exceptions import FieldError
 
@@ -7,7 +7,7 @@ from django.core.exceptions import FieldError
 class ShopProductListView(ListView):
 
     template_name = "shop/product-list.html"
-    paginate_by = 9
+    paginate_by = 5
     
     def get_paginate_by(self, queryset):
         return self.request.GET.get("page_size",self.paginate_by)
@@ -34,6 +34,8 @@ class ShopProductListView(ListView):
         context = super().get_context_data(**kwargs)
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
+        context['wishlist_items'] = WishlistProductModel.objects.filter(
+                    user=self.request.user).values_list('product__id',flat=True)
         return context
     
 
@@ -42,3 +44,11 @@ class ShopProductDetailView(DetailView):
     template_name = "shop/product-detail.html"
     queryset = ProductModel.objects.filter(
         status=ProductStatusType.publish.value)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_wished'] = WishlistProductModel.objects.filter(
+                    user=self.request.user,product__id=self.get_object().id).exists()
+        return context
+#class AddOrRemoveWishlistView():
+ #   pass
