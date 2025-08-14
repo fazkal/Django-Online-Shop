@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductCategoryModel,ProductImageModel,ProductModel
+from .models import ProductCategoryModel,ProductImageModel,ProductModel,WishlistProductModel
 
 # Register your models here.
 
@@ -20,4 +20,9 @@ class ProductImageModelAdmin(admin.ModelAdmin):
     def product_title(self, obj):
         return obj.product.title
 
-    product_title.short_description = 'Product Title' 
+    product_title.short_description = 'Product Title'
+
+
+@admin.register(WishlistProductModel)
+class WishlistProductModelAdmin(admin.ModelAdmin):
+    list_display = ('id','user','product')
