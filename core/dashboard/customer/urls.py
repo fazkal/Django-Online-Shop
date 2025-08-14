@@ -16,6 +16,9 @@ urlpatterns = [
     path('address/<int:pk>/delete/',views.CustomerAddressDeleteView.as_view(),name='address-delete'),
 
     path('order/list/',views.CustomerOrderListView.as_view(),name='order-list'),
-    path('order/<int:pk>/detail/',views.CustomerOrderDetailView.as_view(),name='order-detail')
+    path('order/<int:pk>/detail/',views.CustomerOrderDetailView.as_view(),name='order-detail'),
+
+    path('wishlist/list/',views.CustomerWishlistListView.as_view(),name='wishlist-list'),
+    path('wishlist/<int:pk>/delete/',views.WishlistDeleteView.as_view(),name='wishlist-delete')
 
 ]
