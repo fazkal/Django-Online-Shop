@@ -68,3 +68,11 @@ class ProductImageModel(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+
+class WishlistProductModel(models.Model):
+    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductModel,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.product.title
