@@ -21,9 +21,16 @@
                   </div>
 
                   <div class="card-pinned-top-end">
-                    <button type="button" class="btn btn-outline-secondary btn-xs btn-icon rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="افزودن به علایق">
-                      <i class="bi-heart"></i>
+                    {% if request.user.is_authenticated %}
+                    <button type="button" 
+                    class="btn btn-outline-secondary btn-xs btn-icon rounded-circle {%if latest_product.id in wishlist_items%} active {%endif%}" 
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="top" 
+                    title="{%if latest_product.id in wishlist_items%}حذف از علایق{%else%}افزودن به علایق{%endif%}" 
+                    onclick="addToWishlist(this, '{{latest_product.id}}')">
+                    <i class="bi-heart"></i>
                     </button>
+                    {%endif%}
                   </div>
                 </div>
 
