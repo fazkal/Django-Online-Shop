@@ -1,6 +1,8 @@
 from .models import ProductModel,ProductStatusType,ProductCategoryModel,WishlistProductModel
-from django.views.generic import ListView,DetailView
+from django.views.generic import ListView,DetailView,View
 from django.core.exceptions import FieldError
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -35,7 +37,8 @@ class ShopProductListView(ListView):
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
         context['wishlist_items'] = WishlistProductModel.objects.filter(
-                    user=self.request.user).values_list('product__id',flat=True)
+                    user=self.request.user).values_list(
+                    'product__id',flat=True)if self.request.user.is_authenticated else []
         return context
     
 
@@ -48,7 +51,33 @@ class ShopProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_wished'] = WishlistProductModel.objects.filter(
-                    user=self.request.user,product__id=self.get_object().id).exists()
+                    user=self.request.user,product__id=
+                    self.get_object().id).exists()if self.request.user.is_authenticated else False
         return context
-#class AddOrRemoveWishlistView():
- #   pass
+    
+
+class AddOrRemoveWishlistView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get('product_id')
+        message = ""
+        added = False
+        
+        if not product_id:
+            return JsonResponse({'message': 'شناسه محصول نامعتبر است', 'added': added}, status=400)
+            
+        try:
+            product = ProductModel.objects.get(id=product_id, status=ProductStatusType.publish.value)
+        except ProductModel.DoesNotExist:
+            return JsonResponse({'message': 'محصول یافت نشد', 'added': added}, status=404)
+            
+        try:
+            wishlist_item = WishlistProductModel.objects.get(user=request.user, product=product)
+            wishlist_item.delete()
+            message = "محصول از لیست علایق حذف شد."
+            added = False
+        except WishlistProductModel.DoesNotExist:
+            WishlistProductModel.objects.create(user=request.user, product=product)
+            message = "محصول به لیست علایق اضافه شد."
+            added = True
+            
+        return JsonResponse({'message': message, 'added': added})
