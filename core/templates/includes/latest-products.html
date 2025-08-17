@@ -62,15 +62,19 @@
                   <!-- Rating -->
                   <a class="d-inline-flex align-items-center mb-3" href="#">
                     <div class="d-flex gap-1 ms-2">
-                      <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                      <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                      <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                      <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                      <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
+                        {% for i in "12345" %}
+                        {% if i|add:0 <= latest_product.avg_rate %} <span><i
+                                class="bi bi-star-fill star-rate"></i></span>
+                            {% else %}
+                            <span><i class="bi bi-star star-rate"></i></span>
+                            {% endif %}
+
+                            {% endfor %}
+                            <span class="ms-1">{{latest_product.avg_rate}}/5</span>
                     </div>
-                    <span class="small">0</span>
-                  </a>
-                  <!-- End Rating -->
+
+                </a>
+                <!-- End Rating -->
 
                   <button type="button" class="btn btn-outline-primary btn-sm btn-transition rounded-pill">افزودن به سبد خرید</button>
                 </div>
