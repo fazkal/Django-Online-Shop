@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator,MinValueValidator
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.db.models import Avg
 
 # Create your models here.
 class ReviewStatusType(models.IntegerChoices):
@@ -19,5 +22,24 @@ class ReviewModels(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-created_date']
+
     def __str__(self):
         return f'{self.user} - {self.product.id}'
+    
+    def get_status(self):
+        return{
+            'id': self.status,
+            'title': ReviewStatusType(self.status).name,
+            'lable': ReviewStatusType(self.status).label
+        }
+    
+@receiver(post_save,sender=ReviewModels)
+def calculate_avg_review(sender,instance,created,**kwargs):
+    if instance.status == ReviewStatusType.accepted.value:
+        product = instance.product
+        average_rating = ReviewModels.objects.filter(
+            product=product, status=ReviewStatusType.accepted).aggregate(Avg('rate'))['rate__avg']
+        product.avg_rate = round(average_rating,1)
+        product.save()
