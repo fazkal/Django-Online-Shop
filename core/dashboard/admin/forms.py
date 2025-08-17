@@ -1,5 +1,6 @@
 from accounts.models import Profile
 from shop.models import ProductModel
+from review.models import ReviewModels
 from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -62,3 +63,18 @@ class AdminProductEditeForm(forms.ModelForm):
         self.fields['status'].widget.attrs['class'] = 'form-control'
         #self.fields['price'].widget.attrs['class'] = 'form-control'
         self.fields['discount_percent'].widget.attrs['class'] = 'form-control'
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = ReviewModels
+        fields = [
+            "description",
+            "rate",
+            "status",
+        ] 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['rate'].widget.attrs['class'] = 'form-control '
+        self.fields['status'].widget.attrs['class'] = 'form-select'
